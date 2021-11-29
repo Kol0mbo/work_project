@@ -1,39 +1,45 @@
-import { useState,  useEffect } from "react";
+import React from "react";
 import "./App.css";
 import './index';
+import { Link } from "react-router-dom";
 
-function Component({ items, isLoaded, error, handleClick }) {
+function Component({ items }) {
+    
+  const IMG_URL = 'https://image.tmdb.org/t/p/w500'; 
 
-  const [value, setValue] = useState('')
-  const [filtered, setFiltered] = useState([])
-  
-  useEffect(() => {
-    setFiltered(value === '' ? items : items.filter(element => element.title.toLowerCase().includes(value.toLowerCase())))
-  }, [items, value])
+  function getColor(vote) {
+    if(vote>= 8){
+        return 'green'
+    }else if(vote >= 5){
+        return "orange"
+    }else{
+        return 'red'
+    }
+}
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading...</div>;
-  } else {
     return (
-      <div> 
-        <input type="text" placeholder="Search...." onChange={(event) => setValue(event.target.value)} />
-        <ul>
-        {filtered.map(item =>(
-            <li key={item.id} className="butt">
-                <img width="150" height="150" src={item.thumbnailUrl}/>
-                {item.title}
-                <div className="butoon-class">
-                  <button id={item.album} onClick={() => handleClick(item.id)}>Like</button>
+      
+          <main id="main">
+            {items.map(item => (
+              <div key={item.id}  class="movie">
+                <img src={item.poster_path? IMG_URL + item.poster_path : "http://via.placeholder.com/1080x1580"} alt={item.title}/>
+                <div class="movie-info">
+                    <h3>{item.title}</h3>
+                    <span class={getColor(item.vote_average)}>{item.vote_average}</span>
                 </div>
-            </li>           
-        ))}  
-    </ul>
-    </div>
+                <div class="overview">
+                    <h3>Overview</h3>
+                    {item.overview}
+                    <br/> 
+                    <button class="know-more"><Link to={`/info/${item.id}`}>Info</Link></button>                             
+                </div>               
+              </div>           
+            ))}
+        </main>
+      
+        
     );
   }
-}
 
 export default Component;
 
