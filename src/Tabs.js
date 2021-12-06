@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
 import Component from "./Component";
+import { Link } from "react-router-dom";
 
 var selectGenger =[];
 var currentPage = 1;
@@ -19,6 +20,13 @@ function Tabs() {
     const [items, setItems] = useState([]);
     const [change, setChange] = useState([]);
     const [index, setIndex] = useState();
+
+    function handleClick(id) {
+      setItems(prevState => prevState.map(element => ({
+        ...element,
+        isFavorite: element.id === id ? !element.isFavorite : element.isFavorite,
+      })))           
+    }
 
     function Select(i){
       
@@ -48,13 +56,17 @@ function Tabs() {
           
         } 
     }
- 
+
     useEffect(() => {
       lastUrl = API_URL;
       fetch(API_URL)
       .then(res => res.json())
       .then((result) => {
-        setItems(result.results);
+        const fetchedData = result.results.map((element) => ({
+          ...element,
+          isFavorite: false,
+        }));
+        setItems(fetchedData);
         setIndex(result.page);
          })
          
@@ -72,19 +84,23 @@ function Tabs() {
       }, [])
 
     function getMovie(url){
-      console.log(url)
       window.scrollTo(0, 1);
       lastUrl = url;
       fetch(url)
       .then(res => res.json())
       .then((result) => {
-        setItems(result.results);
+        const fetchedData = result.results.map((element) => ({
+          ...element,
+          isFavorite: false,
+        }));
+        setItems(fetchedData);
         currentPage = result.page;
         nextPage = currentPage + 1;
         prevPage = currentPage - 1;
         setIndex(result.page);
          })  
     } 
+    
 
       function Search(e){
         const val = e.target.value;
@@ -118,6 +134,7 @@ function Tabs() {
     <body>
     <header>
         <form  id="form">
+            <button class="know-more"><Link to={`/fav`}>Favorite</Link></button> 
             <input type="text" placeholder="Search" id="search" class="search" onChange={Search}/>
         </form> 
     </header> 
@@ -131,7 +148,9 @@ function Tabs() {
         {items.length === 0 ?
         <h1 class="no-results">No Results Found</h1>
         :
-        <Component items={items}/>
+        <Component items={items}
+        handleClick={handleClick}
+        />
         }
         <div class="pagination">
         <div onClick={() => Prev()} class={index === 1 ? 'pagedisabled' : 'page'} >Previous Page</div>

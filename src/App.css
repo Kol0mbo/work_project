@@ -105,6 +105,8 @@ main{
     max-height: 100%;
     transform:translateY(101%);
     transition:transform 0.3s ease-in;
+    overflow:auto;
+
 }
 
 .movie:hover .overview{
@@ -179,8 +181,9 @@ main{
     font-weight: bold;
     border:0;
     border-radius: 50px;
-    padding: 10px 20px;
-    margin-top: 5px;
+    padding: 10px 20px;  
+    display: table-cell; 
+    margin: 5px; 
 }
 /* The Overlay (background) */
 .overlay {
@@ -354,3 +357,24 @@ p{
     flex-wrap: wrap;
     justify-content: center;
 }
+.like{
+    padding:1rem;
+    display:flex;
+    justify-content: flex-start;
+    background-color: var(--secondary-color);
+}
+.fav{
+    display: flex;
+}
+.know{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.heart{
+    display: table-cell;
+    padding-left: 93px;
+}
+
+  
+  

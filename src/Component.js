@@ -2,9 +2,11 @@ import React from "react";
 import "./App.css";
 import './index';
 import { Link } from "react-router-dom";
+import Heart from "react-animated-heart";
 
-function Component({ items }) {
-    
+var value = [];
+
+function Component({ items, handleClick }) {
   const IMG_URL = 'https://image.tmdb.org/t/p/w500'; 
 
   function getColor(vote) {
@@ -16,7 +18,26 @@ function Component({ items }) {
         return 'red'
     }
 }
-
+    function Call(i, fav) {
+      handleClick(i);
+        if(value.length === 0){
+          value.push(i);
+      }
+      else{
+          if(value.includes(i)){
+              value.forEach((id,idx) =>{
+                  if(id === i)
+                  {
+                      value.splice(idx,1);
+                  }
+              })
+          }else{
+              value.push(i);
+          }
+      }
+        localStorage.setItem('item', JSON.stringify(value))
+    }
+    
     return (
       
           <main id="main">
@@ -30,8 +51,15 @@ function Component({ items }) {
                 <div class="overview">
                     <h3>Overview</h3>
                     {item.overview}
-                    <br/> 
-                    <button class="know-more"><Link to={`/info/${item.id}`}>Info</Link></button>                             
+                    <br/>     
+                    <div class="fav">
+                      <div class="know">
+                      <button class="know-more"><Link to={`/info/${item.id}`}>Info</Link></button>  
+                      </div>               
+                      <div class="heart">
+                      <Heart isClick={item.isFavorite} onClick={() => Call(item.id, item.isFavorite)} />
+                      </div>                        
+                    </div> 
                 </div>               
               </div>           
             ))}
